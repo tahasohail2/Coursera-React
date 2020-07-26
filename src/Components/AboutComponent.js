@@ -8,20 +8,31 @@ import {
   Media,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { Loading } from "./LoadingComponent";
+import { BaseUrl } from "../shared/baseUrl";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
 
 function RenderLeader({ leader }) {
   if (leader != null) {
     return (
       <div className="col-12">
         <Media tag="li">
-          <Media left middle>
-            <Media
-              className="img-thumbnail"
-              object
-              src={leader.image}
-              alt={leader.name}
-            />
-          </Media>
+          <FadeTransform
+            in
+            transformProps={{
+              exitTransform: "scale(0.5) translateY(-50%)",
+            }}
+          >
+            <Media left middle>
+              <Media
+                className="img-thumbnail"
+                object
+                src={BaseUrl + leader.image}
+                alt={leader.name}
+              />
+            </Media>
+          </FadeTransform>
+
           <Media body className="ml-5">
             <Media heading>{leader.name}</Media>
             <p>{leader.designation}</p>
@@ -35,14 +46,32 @@ function RenderLeader({ leader }) {
   }
 }
 function About(props) {
-  const leaders = props.leaders.map((leader) => {
+  const leaders = props.leaders.leaders.map((leader) => {
     return (
       <div key={leader.id}>
-        <RenderLeader leader={leader} />
+        <RenderLeader
+          leader={leader}
+          isLoading={props.CorporateLoading}
+          errorMessage={props.CorporateErrMess}
+        />
       </div>
     );
   });
-
+  function CorporateLeader() {
+    if (props.leaders.isLoading) {
+      return <Loading />;
+    } else if (props.leaders.errMess) {
+      return <h4>{props.leaders.errMess}</h4>;
+    } else {
+      return (
+        <Stagger in>
+          <Fade in>
+            <Media list>{leaders}</Media>
+          </Fade>
+        </Stagger>
+      );
+    }
+  }
   return (
     <div className="container">
       <div className="row">
@@ -119,7 +148,7 @@ function About(props) {
           <h2>Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <Media list>{leaders}</Media>
+          <CorporateLeader />
         </div>
       </div>
     </div>

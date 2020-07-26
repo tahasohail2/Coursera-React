@@ -160,3 +160,120 @@ export const addPromos = (promos) => ({
   type: ActionTypes.ADD_PROMOS,
   payload: promos,
 });
+
+export const fetchLeaders = () => (dispatch) => {
+  dispatch(LeadersLoading(true));
+
+  return fetch(BaseUrl + "leaders")
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error " + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      (error) => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
+    .then((response) => response.json())
+    .then((leader) => dispatch(addLeaders(leader)))
+    .catch((error) => dispatch(LeadersFailed(error.message)));
+};
+export const LeadersLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING,
+});
+
+export const LeadersFailed = (errorMessage) => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: errorMessage,
+});
+
+export const addLeaders = (leaders) => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders,
+});
+
+export const fetchCorporate = () => (dispatch) => {
+  dispatch(CorporateLoading(true));
+
+  return fetch(BaseUrl + "leaders")
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error " + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      (error) => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
+    .then((response) => response.json())
+    .then((corporate) => dispatch(addCorporate(corporate)))
+    .catch((error) => dispatch(CorporateFailed(error.message)));
+};
+export const CorporateLoading = () => ({
+  type: ActionTypes.CORPORATE_LOADING,
+});
+
+export const CorporateFailed = (errorMessage) => ({
+  type: ActionTypes.CORPORATE_FAILED,
+  payload: errorMessage,
+});
+
+export const addCorporate = (corporate) => ({
+  type: ActionTypes.ADD_CORPORATE,
+  payload: corporate,
+});
+
+export const postFeedback = (feedback) => (dispatch) => {
+  const newFeedback = Object.assign(feedback);
+
+  return fetch(BaseUrl + "feedback", {
+    method: "POST",
+    body: JSON.stringify(newFeedback),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error " + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      (error) => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
+    .then((response) => response.json())
+    .then((response) =>
+      alert("Thank You For Your Feedback!\n" + JSON.stringify(response))
+    )
+    .then((response) => dispatch(response))
+
+    .catch((error) => {
+      console.log("Post Feedbacks", error.message);
+    });
+};
