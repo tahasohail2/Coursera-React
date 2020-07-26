@@ -226,6 +226,14 @@
       "comment": "Tinkering about?",
       "date": "2020-07-24T21:02:30.453Z",
       "id": 24
+    },
+    {
+      "dishId": 0,
+      "rating": "4",
+      "author": "Taha Sohail",
+      "comment": "Taha <3",
+      "date": "2020-07-26T19:56:14.057Z",
+      "id": 25
     }
   ],
   "promotions": [
